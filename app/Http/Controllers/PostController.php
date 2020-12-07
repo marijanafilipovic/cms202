@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts = Posts::all();
+       $posts = Post::all();
        return response()->json($posts);
     }
 
@@ -36,13 +36,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-       $request->validate([
+      /* $request->validate([
           'title' => 'required',
           'description' => 'required',
-          'image' => '',
-           'price' => ''
+           'price' => 'required'
        ]);
        $post = Post::create($request->all());
+       */
+       $post = new Post;
+       $post->title = $request->title;
+       $post->description = $request->description;
+       $post->price = $request->price;
+       $post->save();
        return response()->json(['message' => 'post created', 'post' => $post]);
 
     }
@@ -104,7 +109,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-    returnn response()->json([
+    return response()->json([
        'message' => 'post deleted'
     ]);
     }

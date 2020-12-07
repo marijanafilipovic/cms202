@@ -68,8 +68,9 @@
 <!--        <div id="warrper"></div>
 -->
 <h1>HELLO</h1>
-        <div id="example"></div>
-    <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
+        <div id="header"></div>
+
+    <script src="{{ asset('js/index.js') }}" type="text/javascript"></script>
 
     </body>
 </html>

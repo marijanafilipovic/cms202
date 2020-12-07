@@ -14,14 +14,17 @@ import Swal from "sweetalert2";
         this.onChangePostTitle = this.onChangePostTitle.bind(this);
         this.onChangePostPrice = this.onChangePostPrice.bind(this);
         this.onChangePostDescription = this.onChangePostDescription.bind(this);
+        this.onChangePostImage = this.onChangePostImage.bind(this)
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
 
         // Setting up state
         this.state = {
             title: '',
             description: '',
-            price: ''
+            price: '',
+            image: ''
         }
     }
     onChangePostTitle(e){
@@ -33,28 +36,64 @@ import Swal from "sweetalert2";
     onChangePostPrice(e){
         this.setState({price: e.target.value})
     }
-    onSubmit(e){
+    onChangePostImage(e) {
+        this.setState({image: e.target.value})
+    }
+    handleChange(event) {
+        this.setState({
+          file: URL.createObjectURL(event.target.files[0])
+        })
+      }
+    // onChange(e) {
+    //     let files = e.target.files || e.dataTransfer.files;
+    //     if (!files.length)
+    //           return;
+    //     this.createImage(files[0]);
+    //   }
+    //   createImage(file) {
+    //     let reader = new FileReader();
+    //     reader.onload = (e) => {
+    //       this.setState({
+    //         image: e.target.result
+    //       })
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    //   fileUpload(image){
+    //     const url = 'http://localhost:8000/api/';
+    //     const formData = {file: this.state.image}
+    //     return  post(url, formData)
+    //             .then(response => console.log(response))
+    //   }
+    
+      onSubmit(e){
         e.preventDefault()
         const post = {
 
             title: this.state.title,
             description: this.state.description,
-            price: this.state.price
+            price: this.state.price,
+            image: this.state.file
         };
-        axios.post('http://localhost:8000/api/posts', post,  {
+        console.log(post);
+        axios.post('http://localhost:8000/api/posts', post,{
             headers: {'Content-Type': 'application/json'}
         })
             .then(res => console.log(res.data));
-
+        
    Swal.fire(
             'Proizvod je upisan',
             'Odlicno',
             'success'
         );
-        this.setState({name: '', description:'', price: '' })
+        this.setState({name: '', description:'', price: '', image: ''})
+        console.log(post.image)
     }
-    render(){
-        return(<div className="form-wrapper">
+    
+      render(){
+        return(
+            <div className="form-wrapper">
+                <PostList/>
                 <Form onSubmit={this.onSubmit}>
                     <Row>
                         <Col>
@@ -74,22 +113,25 @@ import Swal from "sweetalert2";
                     </Row>
 
 
-                    <Form.Group controlId="description">
+                    <Form.Group controlId="Price">
                         <Form.Label>Cena</Form.Label>
                         <Form.Control type="number" value={this.state.price} onChange={this.onChangePostPrice}/>
                     </Form.Group>
 
+                    <Form.Group controlId="Image">
+                        <Form.Label>Slika</Form.Label>
+                        <Form.Control type="file" value={this.state.image} onChange={this.handleChange}/>
+                    </Form.Group>
 
                     <Button variant="primary" size="lg" block="block" type="submit">
                         Dodaj Proizvod
                     </Button>
                 </Form>
                 <br></br>
-                <br></br>
-
-                <PostList> </PostList>
+                <br></br> 
             </div>
-            );
+        );
+               
     }
 
 }
